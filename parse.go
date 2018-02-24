@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -35,7 +34,7 @@ func parse(s string) {
 		var err error
 		name, err = filepath.Abs(name)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: %s", err.Error())
+			epr("Error: %s", err.Error())
 			os.Exit(2)
 		}
 	}
