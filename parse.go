@@ -11,7 +11,9 @@ func parse(s string) {
 
 	if O.OnlySuffix {
 		suffix := filepath.Ext(name)
-		pr("%s", suffix[1:])
+		if len(suffix) > 0 {
+			pr("%s", suffix[1:])
+		}
 		return
 	}
 
