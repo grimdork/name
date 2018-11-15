@@ -29,7 +29,6 @@ type FileOpt struct {
 func main() {
 	_, err := flags.Parse(&O)
 	if err != nil {
-		pr("%$v", err)
 		return
 	}
 
