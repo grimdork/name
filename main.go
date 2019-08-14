@@ -4,45 +4,37 @@ import (
 	"fmt"
 	"os"
 
-	flags "github.com/jessevdk/go-flags"
+	"github.com/Urethramancer/signor/opt"
 )
 
 // Version is filled in from git tags by the build script.
-var Version = "undefined"
+var version = "undefined"
 
 // O for options.
 var O struct {
-	Version    bool    `short:"v" description:"Display the version and exit."`
-	Path       bool    `short:"p" description:"Strip the path from the filename, if present."`
-	Suffix     bool    `short:"s" description:"Strip the suffix from the filename, if present."`
-	OnlySuffix bool    `short:"S" description:"Return only the suffix."`
-	Name       bool    `short:"n" description:"Strip the filename and suffix, leaving only the path."`
-	Absolute   bool    `short:"a" description:"Return the absolute path."`
-	File       FileOpt `positional-args:"true"`
-}
-
-// FileOpt is required.
-type FileOpt struct {
-	Name string `positional-arg-name:"FILE"`
+	opt.DefaultHelp
+	Version    bool   `short:"v" help:"Display the version and exit."`
+	Path       bool   `short:"p" help:"Strip the path from the filename, if present."`
+	Suffix     bool   `short:"s" help:"Strip the suffix from the filename, if present."`
+	OnlySuffix bool   `short:"S" help:"Return only the suffix."`
+	Name       bool   `short:"n" help:"Strip the filename and suffix, leaving only the path."`
+	Absolute   bool   `short:"a" help:"Return the absolute path."`
+	File       string `placeholder:"FILENAME" help:"Filename to process."`
 }
 
 func main() {
-	_, err := flags.Parse(&O)
-	if err != nil {
+	a := opt.Parse(&O)
+	if O.Help || O.File == "" {
+		a.Usage()
 		return
 	}
 
 	if O.Version {
-		pr("name %s", Version)
+		pr("name %s", version)
 		return
 	}
 
-	if O.File.Name == "" {
-		epr("A filename is required.")
-		return
-	}
-
-	parse(O.File.Name)
+	parse(O.File)
 }
 
 func pr(f string, v ...interface{}) {
