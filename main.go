@@ -13,24 +13,25 @@ var version = "undefined"
 // O for options.
 var O struct {
 	opt.DefaultHelp
-	Version    bool   `short:"v" help:"Display the version and exit."`
-	Path       bool   `short:"p" help:"Strip the path from the filename, if present."`
-	Suffix     bool   `short:"s" help:"Strip the suffix from the filename, if present."`
-	OnlySuffix bool   `short:"S" help:"Return only the suffix."`
-	Name       bool   `short:"n" help:"Strip the filename and suffix, leaving only the path."`
-	Absolute   bool   `short:"a" help:"Return the absolute path."`
+	Version    bool   `short:"v" long:"version" help:"Display the version and exit."`
+	Path       bool   `short:"p" long:"path" help:"Strip the path from the filename, if present."`
+	Suffix     bool   `short:"s" long:"stripsuffix" help:"Strip the suffix from the filename, if present."`
+	OnlySuffix bool   `short:"S" long:"onlysuffix" help:"Return only the suffix."`
+	Name       bool   `short:"n" long:"noname" help:"Strip the filename and suffix, leaving only the path."`
+	Absolute   bool   `short:"a" long:"absolute" help:"Return the absolute path."`
 	File       string `placeholder:"FILENAME" help:"Filename to process."`
 }
 
 func main() {
 	a := opt.Parse(&O)
-	if O.Help || O.File == "" {
-		a.Usage()
-		return
-	}
 
 	if O.Version {
 		pr("name %s", version)
+		return
+	}
+
+	if O.Help || O.File == "" {
+		a.Usage()
 		return
 	}
 
