@@ -9,7 +9,7 @@ import (
 	"github.com/grimdork/climate/arg"
 )
 
-// Version is filled in from git tags by the build script.
+// These variables are set by goreleaser when building with that or GitHub actions.
 var version = "undefined"
 var date = "undefined"
 

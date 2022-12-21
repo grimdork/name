@@ -19,13 +19,13 @@ ping6
 
 `name -s <filename>` returns `filename` without any suffix. Example:
 ```sh
-$ name -s parse.go
-parse
+$ name -s main.go
+main
 ```
 
 `name -S <filename>` returns only the suffix of `filename`. Example:
 ```sh
-$ name -S parse.go
+$ name -S main.go
 go
 ```
 
@@ -37,13 +37,13 @@ $ name -n /sbin/ping6
 
 `name -a <filename>` expands `filename` to include the full (absolute) path. Example:
 ```sh
-$ name -a parse.go
-/Users/orb/go/src/github.com/Urethramancer/name/parse.go
+$ name -a main.go
+/Users/orb/go/src/github.com/Urethramancer/name/main.go
 ```
 
 You can also combine flags, for example:
 ```sh
-$ name -as parse.go
-/Users/orb/go/src/github.com/Urethramancer/name/parse
+$ name -as main.go
+/Users/orb/go/src/github.com/Urethramancer/name/main
 ```
 
