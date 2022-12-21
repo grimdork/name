@@ -3,39 +3,85 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
-	"github.com/Urethramancer/signor/opt"
+	"github.com/grimdork/climate/arg"
 )
 
 // Version is filled in from git tags by the build script.
 var version = "undefined"
-
-// O for options.
-var O struct {
-	opt.DefaultHelp
-	Version    bool   `short:"v" long:"version" help:"Display the version and exit."`
-	Path       bool   `short:"p" long:"path" help:"Strip the path from the filename, if present."`
-	Suffix     bool   `short:"s" long:"stripsuffix" help:"Strip the suffix from the filename, if present."`
-	OnlySuffix bool   `short:"S" long:"onlysuffix" help:"Return only the suffix."`
-	Name       bool   `short:"n" long:"noname" help:"Strip the filename and suffix, leaving only the path."`
-	Absolute   bool   `short:"a" long:"absolute" help:"Return the absolute path."`
-	File       string `placeholder:"FILENAME" help:"Filename to process."`
-}
+var date = "undefined"
 
 func main() {
-	a := opt.Parse(&O)
+	opt := arg.New("name")
+	opt.SetDefaultHelp(true)
+	opt.SetOption(arg.GroupDefault, "v", "version", "Display the version and exit.", false, false, arg.VarBool, nil)
+	opt.SetOption(arg.GroupDefault, "p", "nopath", "Strip the path from the filename, if present.", false, false, arg.VarBool, nil)
+	opt.SetOption(arg.GroupDefault, "s", "stripsuffix", "Strip the suffix from the filename, if present.", false, false, arg.VarBool, nil)
+	opt.SetOption(arg.GroupDefault, "S", "onlysuffix", "Return only the suffix.", false, false, arg.VarBool, nil)
+	opt.SetOption(arg.GroupDefault, "n", "noname", "Strip the filename and suffix, leaving only the path.", false, false, arg.VarBool, nil)
+	opt.SetOption(arg.GroupDefault, "a", "absolute", "Return the absolute path.", false, false, arg.VarBool, nil)
+	opt.SetPositional("FILENAME", "Filename to process.", "", true, arg.VarString)
 
-	if O.Version {
+	var err error
+	args := os.Args[1:]
+	err = opt.Parse(args)
+	if err != nil {
+		if err == arg.ErrNoArgs {
+			opt.PrintHelp()
+			return
+		}
+
+		fmt.Printf("Error: %s\n", err.Error())
+		os.Exit(2)
+	}
+
+	if opt.GetBool("v") {
 		pr("name %s", version)
 		return
 	}
 
-	if O.Help || O.File == "" {
-		a.Usage()
+	name := opt.GetPosString("FILENAME")
+	if name == "" {
+		opt.PrintHelp()
 		return
 	}
 
-	parse(O.File)
+	if opt.GetBool("S") {
+		suffix := filepath.Ext(name)
+		if len(suffix) > 0 {
+			pr("%s", suffix[1:])
+		}
+		return
+	}
+
+	if opt.GetBool("a") {
+		var err error
+		name, err = filepath.Abs(name)
+		if err != nil {
+			epr("Error: %s", err.Error())
+			os.Exit(2)
+		}
+	}
+
+	if opt.GetBool("p") {
+		name = filepath.Base(name)
+	}
+
+	if opt.GetBool("n") {
+		name = filepath.Dir(name)
+	}
+
+	if opt.GetBool("S") {
+		suffix := filepath.Ext(name)
+		if len(suffix) > 0 {
+			name = strings.TrimSuffix(name, suffix)
+		}
+	}
+
+	pr("%s", name)
+
 }
 
 func pr(f string, v ...interface{}) {
