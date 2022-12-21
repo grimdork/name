@@ -1,3 +1,0 @@
-#!/bin/bash
-VER=`git describe --tags master --abbrev=0`
-go build -ldflags "-w -s -X main.version=$VER"
