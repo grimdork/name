@@ -42,3 +42,54 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+
+# Homebrew (v2 schema)
+brews:
+  - name: name
+    repository:
+      owner: grimdork
+      name: homebrew-tools
+    commit_author:
+      name: grimdork
+      email: github@grimdork.net
+    homepage: "https://github.com/grimdork/name"
+    description: "Small utility for path/name manipulation"
+    license: MIT
+    # directory is optional; leave default. skip_upload left unset so upstream publishing can be controlled by CI/actions
+
+# NFPM (packaging) — conservative v2 fields
+nfpm:
+  - package_name: name
+    vendor: "grimdork.net"
+    maintainer: "Grimdork <github@grimdork.net>"
+    homepage: "https://github.com/grimdork/name"
+    description: "Small utility for path/name manipulation"
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    bindir: "/usr/bin"
+    section: contrib
+    priority: extra
+    contents:
+      - src: LICENSE
+        dst: "/usr/share/doc/name/LICENSE"
+      - src: README.md
+        dst: "/usr/share/doc/name/README.md"
+
+# Binary signing (v2: BinarySign)
+# conservative: sign binaries (not checksums). Adjust cmd/args if you need a different signer.
+signs:
+  - id: gpg-sign
+    cmd: gpg
+    args:
+      - --batch
+      - --pinentry-mode
+      - loopback
+      - --local-user
+      - "{{ .Env.GPG_FINGERPRINT }}"
+      - --output
+      - "${signature}"
+      - --detach-sign
+      - "${artifact}"
+    artifacts: binary
