@@ -3,10 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/grimdork/climate/arg"
+	"github.com/grimdork/name/nameutil"
 )
 
 // These variables are set by goreleaser when building with that or GitHub actions.
@@ -24,10 +23,8 @@ func main() {
 	opt.SetOption(arg.GroupDefault, "a", "absolute", "Return the absolute path.", false, false, arg.VarBool, nil)
 	opt.SetPositional("FILENAME", "Filename to process.", "", true, arg.VarString)
 
-	var err error
 	args := os.Args[1:]
-	err = opt.Parse(args)
-	if err != nil {
+	if err := opt.Parse(args); err != nil {
 		if err == arg.ErrNoArgs {
 			opt.PrintHelp()
 			return
@@ -38,7 +35,7 @@ func main() {
 	}
 
 	if opt.GetBool("v") {
-		pr("name %s", version)
+		pr("name %s (%s)", version, date)
 		return
 	}
 
@@ -48,40 +45,21 @@ func main() {
 		return
 	}
 
-	if opt.GetBool("S") {
-		suffix := filepath.Ext(name)
-		if len(suffix) > 0 {
-			pr("%s", suffix[1:])
-		}
-		return
+	opts := nameutil.Options{
+		Nopath:      opt.GetBool("p"),
+		StripSuffix: opt.GetBool("s"),
+		OnlySuffix:  opt.GetBool("S"),
+		Noname:      opt.GetBool("n"),
+		Absolute:    opt.GetBool("a"),
 	}
 
-	if opt.GetBool("a") {
-		var err error
-		name, err = filepath.Abs(name)
-		if err != nil {
-			epr("Error: %s", err.Error())
-			os.Exit(2)
-		}
+	res, err := nameutil.Process(name, opts)
+	if err != nil {
+		epr("Error: %s", err.Error())
+		os.Exit(2)
 	}
 
-	if opt.GetBool("p") {
-		name = filepath.Base(name)
-	}
-
-	if opt.GetBool("n") {
-		name = filepath.Dir(name)
-	}
-
-	if opt.GetBool("s") {
-		suffix := filepath.Ext(name)
-		if len(suffix) > 0 {
-			name = strings.TrimSuffix(name, suffix)
-		}
-	}
-
-	pr("%s", name)
-
+	pr("%s", res)
 }
 
 func pr(f string, v ...interface{}) {

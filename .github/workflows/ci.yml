@@ -35,8 +35,20 @@ jobs:
       - name: Run unit tests
         run: go test ./... -v
 
-      - name: Run vulnerability scan (govulncheck)
+      - name: Run vulnerability scan (govulncheck) and fail on findings
         run: |
-          set -e
+          set -euo pipefail
+          # Install govulncheck
           go install golang.org/x/vuln/cmd/govulncheck@latest
-          govulncheck ./...
+          # Run govulncheck in JSON mode and save output
+          govulncheck -json ./... > gov.json || true
+          # Install jq for parsing
+          sudo apt-get update && sudo apt-get install -y jq
+          # Count vulnerabilities by finding all .Vulns arrays anywhere in the JSON
+          count=$(jq '[.. | .Vulns? // empty | .[]] | length' gov.json)
+          echo "govulncheck found vulnerabilities: $count"
+          if [ "$count" -gt 0 ]; then
+            echo "Failing CI because govulncheck reported vulnerabilities"
+            cat gov.json
+            exit 1
+          fi
