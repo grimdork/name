@@ -58,7 +58,7 @@ brews:
     # directory is optional; leave default. skip_upload left unset so upstream publishing can be controlled by CI/actions
 
 # NFPM (packaging) — conservative v2 fields
-nfpm:
+nfpms:
   - package_name: name
     vendor: "grimdork.net"
     maintainer: "Grimdork <github@grimdork.net>"
