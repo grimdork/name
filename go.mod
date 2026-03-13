@@ -1,5 +1,5 @@
-module github.com/Urethramancer/name
+module github.com/grimdork/name
 
-go 1.19
+go 1.25
 
-require github.com/grimdork/climate v0.8.7
+require github.com/grimdork/climate v0.23.1

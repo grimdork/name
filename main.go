@@ -73,7 +73,7 @@ func main() {
 		name = filepath.Dir(name)
 	}
 
-	if opt.GetBool("S") {
+	if opt.GetBool("s") {
 		suffix := filepath.Ext(name)
 		if len(suffix) > 0 {
 			name = strings.TrimSuffix(name, suffix)

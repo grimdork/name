@@ -38,12 +38,12 @@ $ name -n /sbin/ping6
 `name -a <filename>` expands `filename` to include the full (absolute) path. Example:
 ```sh
 $ name -a main.go
-/Users/orb/go/src/github.com/Urethramancer/name/main.go
+/Users/orb/go/src/github.com/grimdork/name/main.go
 ```
 
 You can also combine flags, for example:
 ```sh
 $ name -as main.go
-/Users/orb/go/src/github.com/Urethramancer/name/main
+/Users/orb/go/src/github.com/grimdork/name/main
 ```
 

@@ -18,6 +18,7 @@ builds:
     goarch:
       - amd64
       - arm64
+    
 release:
   prerelease: true
 
@@ -42,9 +43,9 @@ brews:
       owner: grimdork
       name: homebrew-tools
     commit_author:
-      name: Urethramancer
+      name: grimdork
       email: github@grimdork.net
-    homepage: "https://github.com/Urethramancer/name"
+    homepage: "https://github.com/grimdork/name"
     description: "Merges functionality of the dirname and basename shell commands with a few extra features."
     license: "MIT"
     skip_upload: auto
