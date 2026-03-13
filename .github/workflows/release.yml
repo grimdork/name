@@ -6,6 +6,12 @@ on:
   push:
     tags:
       - '*'
+
+permissions:
+  contents: write
+  packages: write
+  actions: write
+
 jobs:
   goreleaser:
     runs-on: ubuntu-latest
