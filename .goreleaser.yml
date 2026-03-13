@@ -1,11 +1,11 @@
+version: 2
 project_name: name
 before:
   hooks:
     - go mod download
 
 builds:
-  -
-    id: "client"
+  - id: "client"
     dir: "."
     ldflags:
       - -s -w -X main.version={{.Version}} -X main.date={{.CommitDate}}
@@ -18,7 +18,7 @@ builds:
     goarch:
       - amd64
       - arm64
-    
+
 release:
   prerelease: true
 
@@ -29,10 +29,10 @@ archives:
       amd64: x86_64
     wrap_in_directory: true
     format_overrides:
-    - goos: darwin
-      format: tar.xz
-    - goos: linux
-      format: tar.xz
+      - goos: darwin
+        format: tar.xz
+      - goos: linux
+        format: tar.xz
     files:
       - LICENSE
       - README.md
@@ -50,7 +50,7 @@ brews:
     license: "MIT"
     skip_upload: auto
 
-nfpms:
+nfpm:
   -
     replacements:
       darwin: macOS
@@ -69,14 +69,15 @@ nfpms:
     contents:
       - src: LICENSE
         dst: /usr/share/doc/name/LICENSE
-
       - src: README.md
         dst: /usr/share/doc/name/README.md
 
 checksum:
   name_template: 'checksums.txt'
+
 snapshot:
   name_template: "{{ .Tag }}-next"
+
 changelog:
   sort: asc
   filters:
