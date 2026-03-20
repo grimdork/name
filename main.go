@@ -13,7 +13,7 @@ var version = "undefined"
 var date = "undefined"
 
 func main() {
-	opt := arg.New("name")
+	opt := arg.New("name","Manipulate path names.")
 	opt.SetDefaultHelp(true)
 	opt.SetOption(arg.GroupDefault, "v", "version", "Display the version and exit.", false, false, arg.VarBool, nil)
 	opt.SetOption(arg.GroupDefault, "p", "nopath", "Strip the path from the filename, if present.", false, false, arg.VarBool, nil)
